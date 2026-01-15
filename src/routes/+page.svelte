@@ -22,7 +22,7 @@
 
   function handleKeydown(event: KeyboardEvent) {
     // Handle navigation shortcuts
-    if (event.key === "Enter") {
+    if (isFinished && event.key === "Enter") {
       const currentIndex = lessons.findIndex((l) => l.id === selectedLesson.id);
       if (currentIndex < lessons.length - 1) {
         event.preventDefault();
@@ -223,7 +223,7 @@
 
       <!-- Target Text Display -->
       <div
-        class="my-14 bg-white rounded-lg border-0 text-center border-gray-200 font-mono text-3xl leading-relaxed relative cursor-text transition-all break-words flex flex-wrap"
+        class="my-14 bg-white rounded-lg border-0 text-center border-gray-200 font-mono text-3xl leading-relaxed relative cursor-text transition-all flex flex-wrap outline-0"
         role="textbox"
         tabindex="0"
       >
