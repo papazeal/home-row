@@ -21,6 +21,12 @@
   $: lessonIndex = lessons.findIndex((l) => l.id === selectedLesson.id);
 
   function handleKeydown(event: KeyboardEvent) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      resetLesson();
+      return;
+    }
+
     // Handle navigation shortcuts
     if (isFinished && event.key === "Enter") {
       const currentIndex = lessons.findIndex((l) => l.id === selectedLesson.id);
@@ -57,12 +63,6 @@
     if (event.key === "Tab") {
       event.preventDefault();
       selectLesson(selectedLesson);
-      return;
-    }
-
-    if (event.key === "Escape") {
-      event.preventDefault();
-      resetLesson();
       return;
     }
 
@@ -192,7 +192,7 @@
   });
 </script>
 
-<div class="min-h-screen bg-white p-8">
+<div class=" bg-white p-8 flex flex-col justify-center md:min-h-[70lvh]">
   <div class="max-w-3xl mx-auto">
     <!-- Header -->
     <header class="text-center mb-12 hidden">
@@ -203,7 +203,7 @@
     <!-- Main Typing Area -->
     <div class="">
       <div class="text-center">
-        <h3 class="text-3xl text-gray-900 mb-2">
+        <h3 class="text-2xl text-gray-900 mb-2">
           {selectedLesson.title}
         </h3>
         <p class=" text-gray-400 text-lg">{selectedLesson.description}</p>
@@ -268,14 +268,12 @@
 
       <!-- Focus Indicator -->
       <div class="mb-4 flex justify-center gap-8 items-center flex-wrap">
-        {#if isFinished}
-          <div class="text-gray-600">
-            Press <kbd
-              class="px-2 py-1 bg-gray-100 border border-gray-300 rounded mx-1"
-              >Enter</kbd
-            > to proceed
-          </div>
-        {/if}
+        <div class="text-gray-600">
+          Press <kbd
+            class="px-2 py-1 bg-gray-100 border border-gray-300 rounded mx-1"
+            >Esc</kbd
+          > to restart
+        </div>
         {#if !isFinished}
           <div class="text-gray-600">
             <kbd
@@ -288,17 +286,13 @@
             >
             prev / next lessons
           </div>
-          <div class="text-gray-600 hidden">
-            Press <kbd
-              class="px-2 py-1 bg-gray-100 border border-gray-300 rounded mx-1"
-              >Tab</kbd
-            > to restart
-          </div>
+        {/if}
+        {#if isFinished}
           <div class="text-gray-600">
             Press <kbd
               class="px-2 py-1 bg-gray-100 border border-gray-300 rounded mx-1"
-              >Esc</kbd
-            > to reset
+              >Enter</kbd
+            > to proceed
           </div>
         {/if}
       </div>
