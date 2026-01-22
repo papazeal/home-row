@@ -1,24 +1,71 @@
 <script lang="ts">
-  import { lessons, type Lesson } from "$lib/lessons";
-  import { calculateStats, type TypingStats } from "$lib/stats";
+  import {
+    getLessons,
+    getLessonById,
+    type Language,
+    type Lesson,
+  } from "$lib/lessons";
   import { onMount, onDestroy } from "svelte";
   import { browser } from "$app/environment";
   import confetti from "canvas-confetti";
 
+  const STORAGE_KEY_LANGUAGE = "homrow-language";
+  const STORAGE_KEY_LESSON_ID = "homrow-lesson-id";
+
+  const languages: Language[] = ["en", "th"];
+
+  // Initialize with default values
+  let selectedLanguage: Language = "en";
+  let lessons: Lesson[] = getLessons("en");
   let selectedLesson: Lesson = lessons[0];
   let userInput = "";
   let startTime: number | null = null;
-  let endTime: number | null = null;
-  let stats: TypingStats | null = null;
   let isStarted = false;
   let isFinished = false;
-  let isFocused = false;
 
   $: currentCharIndex = userInput.length;
   $: isCorrect = (index: number) =>
     userInput[index] === selectedLesson.content[index];
 
-  $: lessonIndex = lessons.findIndex((l) => l.id === selectedLesson.id);
+  function loadFromStorage() {
+    if (!browser) return;
+
+    const savedLanguage = localStorage.getItem(
+      STORAGE_KEY_LANGUAGE,
+    ) as Language;
+    const savedLessonId = localStorage.getItem(STORAGE_KEY_LESSON_ID);
+
+    if (savedLanguage === "en" || savedLanguage === "th") {
+      selectedLanguage = savedLanguage;
+    }
+
+    lessons = getLessons(selectedLanguage);
+
+    if (savedLessonId) {
+      const lesson = getLessonById(selectedLanguage, savedLessonId);
+      if (lesson) {
+        selectedLesson = lesson;
+      } else {
+        selectedLesson = lessons[0];
+      }
+    } else {
+      selectedLesson = lessons[0];
+    }
+  }
+
+  function saveToStorage() {
+    if (!browser) return;
+    localStorage.setItem(STORAGE_KEY_LANGUAGE, selectedLanguage);
+    localStorage.setItem(STORAGE_KEY_LESSON_ID, selectedLesson.id);
+  }
+
+  function switchLanguage(language: Language) {
+    selectedLanguage = language;
+    lessons = getLessons(language);
+    selectedLesson = lessons[0];
+    resetLesson();
+    saveToStorage();
+  }
 
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === "Escape") {
@@ -141,13 +188,6 @@
   function finishLesson() {
     if (!startTime) return;
 
-    endTime = Date.now();
-    stats = calculateStats(
-      userInput,
-      selectedLesson.content,
-      startTime,
-      endTime
-    );
     isFinished = true;
     playSuccessMelody();
     triggerConfetti();
@@ -156,8 +196,6 @@
   function resetLesson() {
     userInput = "";
     startTime = null;
-    endTime = null;
-    stats = null;
     isStarted = false;
     isFinished = false;
   }
@@ -165,56 +203,41 @@
   function selectLesson(lesson: Lesson) {
     selectedLesson = lesson;
     resetLesson();
-  }
-
-  function formatTime(seconds: number): string {
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
-  }
-
-  function handleClick() {
-    isFocused = true;
+    saveToStorage();
   }
 
   onMount(() => {
+    loadFromStorage();
     if (browser) {
       window.addEventListener("keydown", handleKeydown);
-      window.addEventListener("click", handleClick);
     }
   });
 
   onDestroy(() => {
     if (browser) {
       window.removeEventListener("keydown", handleKeydown);
-      window.removeEventListener("click", handleClick);
     }
   });
 </script>
 
-<div class=" bg-white p-8 flex flex-col justify-center md:min-h-[70lvh]">
+<div class="bg-white p-8 flex flex-col justify-center md:min-h-[70lvh]">
   <div class="max-w-3xl mx-auto">
-    <!-- Header -->
-    <header class="text-center mb-12 hidden">
-      <h1 class="text-3xl font-light text-gray-900 mb-2">Typing</h1>
-      <p class="text-gray-600">basic typing practice</p>
-    </header>
-
     <!-- Main Typing Area -->
     <div class="">
       <div class="text-center">
-        <h3 class="text-2xl text-gray-900 mb-2">
+        <h3 class="text-2xl text-gray-900 mb-2 font-mono">
           {selectedLesson.title}
         </h3>
-        <p class=" text-gray-400 text-lg">{selectedLesson.description}</p>
+        <p class="text-gray-400 text-lg">{selectedLesson.description}</p>
         <div class="flex gap-2 justify-center mt-4">
-          {#each lessons as lesson}
+          {#each lessons as lesson, index}
             <button
               onclick={() => selectLesson(lesson)}
-              class="w-2.5 h-2.5 text-left border rounded-full transition-colors border-0 bg-gray-200 cursor-pointer
+              aria-label="Lesson {index + 1}"
+              class="w-2.5 h-2.5 rounded-full transition-colors bg-gray-200 cursor-pointer
                    {selectedLesson.id === lesson.id
-                ? ' !bg-green-600'
-                : ' hover:border-gray-300 '}"
+                ? 'bg-green-600!'
+                : 'hover:border-gray-300'}"
             >
             </button>
           {/each}
@@ -222,35 +245,36 @@
       </div>
 
       <!-- Target Text Display -->
+
       <div
-        class="my-14 bg-white rounded-lg border-0 text-center border-gray-200 font-mono text-3xl leading-relaxed relative cursor-text transition-all flex flex-wrap outline-0"
+        class="my-14 bg-white text-center text-3xl leading-relaxed relative cursor-text transition-all outline-0"
+        class:font-mono={selectedLanguage == "en"}
         role="textbox"
         tabindex="0"
       >
-        <div class="relative">
-          {#each selectedLesson.content.split("") as char, index}
-            {@const isSpace = char === " "}
-            <span
-              class="relative transition-all duration-150 inline-block"
-              class:text-green-600={index < userInput.length &&
-                isCorrect(index)}
-              class:bg-red-100={index < userInput.length && !isCorrect(index)}
-              class:text-gray-400={index > currentCharIndex || isFinished}
-              class:font-bold-={index === currentCharIndex && !isFinished}
-              class:whitespace-pre={isSpace}
-              class:w-4={isSpace}
-              class:bg-gray-100-={index === currentCharIndex}
-            >
-              {char}
-              {#if index === currentCharIndex && !isFinished}
-                <span
-                  class="absolute left-0 top-0 bottom-0 w-full bg-gray-500/10 animate-pulse"
-                  style="animation: blink 1s infinite;"
-                ></span>
-              {/if}
-            </span>
-          {/each}
-        </div>
+        {#each selectedLesson.content.split("") as char, index}
+          {@const isSpace = char === " "}
+          <span
+            class="relative transition-all duration-150 inline-block"
+            class:text-green-600={index < userInput.length && isCorrect(index)}
+            class:bg-red-100={index < userInput.length && !isCorrect(index)}
+            class:text-gray-400={index > currentCharIndex || isFinished}
+            class:font-bold-={index === currentCharIndex && !isFinished}
+            class:whitespace-pre={isSpace}
+            class:w-4={isSpace}
+            class:font-mono={char !=
+              selectedLesson.content.split("")[index + 1] &&
+              char != selectedLesson.content.split("")[index - 1]}
+          >
+            {char}
+            {#if index === currentCharIndex && !isFinished}
+              <span
+                class="absolute right-0 top-0 bottom-0 w-full bg-gray-500/10 animate-pulse"
+                style="animation: blink 1s infinite;"
+              ></span>
+            {/if}
+          </span>
+        {/each}
       </div>
 
       <style>
@@ -268,101 +292,91 @@
 
       <!-- Focus Indicator -->
       <div class="mb-4 flex justify-center gap-8 items-center flex-wrap">
-        <div class="text-gray-600">
-          Press <kbd
-            class="px-2 py-1 bg-gray-100 border border-gray-300 rounded mx-1"
-            >Esc</kbd
-          > to restart
+        <div class="flex gap-2">
+          <div>Restart</div>
+          <button
+            onclick={resetLesson}
+            class="text-gray-600 cursor-pointer flex items-center gap-1 outline-0"
+          >
+            <kbd
+              class="px-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded mx-1"
+              >ESC</kbd
+            >
+          </button>
         </div>
         {#if !isFinished}
-          <div class="text-gray-600">
-            <kbd
-              class="px-2 py-1 bg-gray-100 border border-gray-300 rounded mr-1"
-              >←</kbd
+          <div class="flex gap-2">
+            <div class="mr-2">Prev / Next Lesson</div>
+            <button
+              onclick={() => {
+                const currentIndex = lessons.findIndex(
+                  (l) => l.id === selectedLesson.id,
+                );
+                if (currentIndex > 0) selectLesson(lessons[currentIndex - 1]);
+              }}
+              class="text-gray-600 cursor-pointer flex items-center gap-1 outline-0"
             >
-            <kbd
-              class="px-2 py-1 bg-gray-100 border border-gray-300 rounded mx-1"
-              >→</kbd
+              <kbd
+                class="px-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded"
+                >←</kbd
+              >
+            </button>
+            <button
+              onclick={() => {
+                const currentIndex = lessons.findIndex(
+                  (l) => l.id === selectedLesson.id,
+                );
+                if (currentIndex < lessons.length - 1)
+                  selectLesson(lessons[currentIndex + 1]);
+              }}
+              class="text-gray-600 cursor-pointer flex items-center gap-1 outline-0"
             >
-            prev / next lessons
+              <kbd
+                class="px-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded"
+                >→</kbd
+              >
+            </button>
           </div>
         {/if}
         {#if isFinished}
-          <div class="text-gray-600">
-            Press <kbd
-              class="px-2 py-1 bg-gray-100 border border-gray-300 rounded mx-1"
-              >Enter</kbd
-            > to proceed
-          </div>
-        {/if}
-      </div>
-    </div>
-
-    <!-- Lesson Selection -->
-
-    <div class="mb-8 mt-18 hidden">
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {#each lessons as lesson}
-          <button
-            onclick={() => selectLesson(lesson)}
-            class="p-3 text-left border rounded-lg transition-colors
-                   {selectedLesson.id === lesson.id
-              ? 'border-blue-500 bg-blue-50 text-blue-900'
-              : 'border-gray-200 hover:border-gray-300 text-gray-700'}"
-          >
-            <div class="font-medium text-sm">{lesson.title}</div>
-            <div class="text-xs text-gray-500 mt-1 hidden">
-              {lesson.description}
-            </div>
-            <div class="text-xs text-gray-400 mt-1 hidden">
-              Target: {lesson.targetWPM} WPM
-            </div>
-          </button>
-        {/each}
-      </div>
-    </div>
-
-    <!-- Results -->
-    {#if stats}
-      <div class="bg-green-50 border border-green-200 rounded-lg p-6 hidden">
-        <h3 class="text-lg font-medium text-green-900 mb-4">Results</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div class="text-center">
-            <div class="text-2xl font-bold text-green-900">{stats.wpm}</div>
-            <div class="text-sm text-green-700">WPM</div>
-          </div>
-          <div class="text-center">
-            <div class="text-2xl font-bold text-green-900">
-              {stats.accuracy}%
-            </div>
-            <div class="text-sm text-green-700">Accuracy</div>
-          </div>
-          <div class="text-center">
-            <div class="text-2xl font-bold text-green-900">
-              {stats.correctChars}
-            </div>
-            <div class="text-sm text-green-700">Correct Chars</div>
-          </div>
-          <div class="text-center">
-            <div class="text-2xl font-bold text-green-900">
-              {formatTime(stats.timeElapsed)}
-            </div>
-            <div class="text-sm text-green-700">Time</div>
-          </div>
-        </div>
-        {#if selectedLesson.targetWPM}
-          <div class="mt-4 text-center">
-            {#if stats.wpm >= selectedLesson.targetWPM}
-              <span class="text-green-700 font-medium">🎉 Target achieved!</span
+          <div class="flex gap-2">
+            <div>Proceed</div>
+            <button
+              onclick={() => {
+                const currentIndex = lessons.findIndex(
+                  (l) => l.id === selectedLesson.id,
+                );
+                if (currentIndex < lessons.length - 1)
+                  selectLesson(lessons[currentIndex + 1]);
+              }}
+              class="text-gray-600 cursor-pointer flex items-center gap-1"
+            >
+              <kbd
+                class="px-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded"
+                >Enter</kbd
               >
-            {:else}
-              <span class="text-yellow-700 font-medium">
-                Target: {selectedLesson.targetWPM} WPM (keep practicing!)
-              </span>
-            {/if}
+            </button>
           </div>
         {/if}
       </div>
-    {/if}
+
+      <!-- Language Selector -->
+      <div class="mt-8">
+        <div class="flex gap-2 justify-center">
+          <div class="mr-2">Language</div>
+          {#each languages as lang}
+            <button
+              onclick={() => switchLanguage(lang)}
+              class="px-2 rounded cursor-pointer bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300 uppercase {selectedLanguage ===
+              lang
+                ? 'bg-green-600! text-white border-0'
+                : ''}"
+            >
+              {lang}
+            </button>
+          {/each}
+        </div>
+      </div>
+    </div>
   </div>
 </div>
