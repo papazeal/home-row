@@ -5,6 +5,7 @@ export interface Lesson {
   content: string;
   tips?: string;
   targetWPM?: number;
+  difficulty?: string;
 }
 
 export const lessons: Lesson[] = [
@@ -14,7 +15,7 @@ export const lessons: Lesson[] = [
     description: "Master the home row keys: A S D F and J K L ;",
     tips: "Place your fingers on the middle row. Use the bumps on F and J to find your position without looking. Keep your wrists slightly elevated.",
     content:
-      "aaa sss ddd fff jjj kkk lll ;;; asdf jkl; asdf jkl; a s d f j k l ; fad dad slag flask falls",
+      "aaa sss ddd fff jjj kkk lll ;;; asdf jkl; asdf jkl; asdfjkl; fad dad sad flask falls",
   },
   {
     id: "index-reaches-gh",
@@ -22,7 +23,7 @@ export const lessons: Lesson[] = [
     description: "Master the inner reaches of the home row.",
     tips: "Reach your left index finger to G and your right index finger to H. Always snap back to F and J immediately after.",
     content:
-      "fgf jhj fgf jhj f g f j h j had gas sash shag dash glad glass flags flash gas lash",
+      "fgf jhj fgf jhj f g f j h j asdfg hjkl; had gas sash flag dash glad glass flags flash gas flag flask falls glad lag",
   },
   {
     id: "top-row-ei",
@@ -31,7 +32,7 @@ export const lessons: Lesson[] = [
     tips: "Your left middle finger moves from D to E. Your right middle finger moves from K to I. Keep other fingers anchored.",
     difficulty: "beginner",
     content:
-      "ded kik ded kik ed ik ed ik did die fed fig kid side dish fish flies hike field",
+      "ded kik ded kik ed ik ed ik did die fed fig kid side dish fish flies hike field haggle shield field gilded skid jagged high idle slide hide",
   },
   {
     id: "top-row-ru",
@@ -39,7 +40,7 @@ export const lessons: Lesson[] = [
     description: "Using index fingers for the upper reaches.",
     tips: "Left index reaches from F to R. Right index reaches from J to U.",
     content:
-      "frf juj frf juj rf ju rf ju rug red run rid fur fire user sure higher rudder fruit",
+      "frf juj frf juj rf ju rf ju rug red rid fur fire user sure higher rudder guard rude judge fraud dragged jagged urged huge surge guard",
   },
   {
     id: "top-row-qw-op",
@@ -47,7 +48,7 @@ export const lessons: Lesson[] = [
     description: "Using ring and pinky fingers for the top row.",
     tips: "Left ring to W, pinky to Q. Right ring to O, pinky to P. These fingers are weaker, so keep your touch light.",
     content:
-      "sws aqa lol ;p; west quit open pool power quick loose world paper quote proud",
+      "sws aqa lol ;p; was was door pool power go loose world paper power proud squad guard judge power world power proud world power proud",
   },
   {
     id: "top-row-ty",
@@ -55,7 +56,7 @@ export const lessons: Lesson[] = [
     description: "The long index reaches for T and Y.",
     tips: "Left index reaches up and right for T. Right index reaches up and left for Y. Stretch without moving your whole hand.",
     content:
-      "ftf jyj ftf jyj tf jy tf jy they that type your toy tray year study truth yesterday",
+      "ftf jyj ftf jyj tf jy tf jy they that type your toy tray year study truth yesterday judge power quiet quote proud type year study type power year",
   },
   {
     id: "bottom-row-vm-bc",
@@ -63,7 +64,7 @@ export const lessons: Lesson[] = [
     description: "Reaching down with index and middle fingers.",
     tips: "F to V and B. J to M and N. D to C. Try not to rest your palms on the desk while reaching down.",
     content:
-      "fvf fbf jmj jnj dcd v b m n c cave bomb mind neck back come move much bean",
+      "fvf fbf jmj jnj dcd v b m n c cave bob mind neck back come move much bean vanish cabin beacon common manage banish beacon manage vanish cabin common",
   },
   {
     id: "bottom-row-xz-comma",
@@ -71,20 +72,20 @@ export const lessons: Lesson[] = [
     description: "The most difficult reaches: ring and pinky fingers.",
     tips: "S to X, A to Z. K to comma, L to period. Precision is more important than speed here.",
     content:
-      "sxs aza k,k l.l x z , . extra zero size zone mark. look, back. next. box zone.",
+      "sxs aza k,k l.l x z , . extra zero size zone mark. look, back. next. box zone. vanish; box; zone; next; look; back; extra; size; zero; mark;",
   },
   {
     id: "shift-keys",
-    title: "Shift Keys (Capitalization)",
+    title: "Shift Keys",
     description: "Learning to use the opposite Shift key.",
     tips: "If the letter is on the right hand, use the left Shift. If on the left hand, use the right Shift.",
     difficulty: "intermediate",
     content:
-      "Aa Ss Dd Ff Jj Kk Ll Dad Said Japan Korea France London Paris Idaho Texas",
+      "Aa Ss Dd Ff Gg Hh Jj Kk Ll Qq Ww Ee Rr Tt Yy Uu Ii Oo Pp Zz Xx Cc Vv Bb Nn Mm Had Gas Slab Dash Glad Flask Falls Quick Brown Fox Jumps Lazy Dog",
   },
   {
     id: "comprehensive-basics",
-    title: "Basic Sentence Fluency",
+    title: "Basic Sentence",
     description: "Combining all lowercase letters and basic punctuation.",
     tips: "Keep a steady rhythm. It is better to type slowly and steadily than to type fast and pause.",
     content:

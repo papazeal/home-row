@@ -75,19 +75,6 @@
     }
 
     // Handle navigation shortcuts
-    if (isFinished && event.key === "Enter") {
-      const currentIndex = lessons.findIndex((l) => l.id === selectedLesson.id);
-      if (currentIndex < lessons.length - 1) {
-        event.preventDefault();
-        selectLesson(lessons[currentIndex + 1]);
-      }
-      return;
-    }
-
-    // Ignore if lesson is finished
-    if (isFinished) return;
-
-    // Handle navigation shortcuts
     if (event.key === "ArrowLeft") {
       const currentIndex = lessons.findIndex((l) => l.id === selectedLesson.id);
       if (currentIndex > 0) {
@@ -247,7 +234,7 @@
       <!-- Target Text Display -->
 
       <div
-        class="my-14 bg-white text-center text-3xl leading-relaxed relative cursor-text transition-all outline-0"
+        class="my-16 bg-white text-center text-3xl leading-relaxed relative cursor-text transition-all outline-0"
         class:font-mono={selectedLanguage == "en"}
         role="textbox"
         tabindex="0"
@@ -308,64 +295,43 @@
             >
           </button>
         </div>
-        {#if !isFinished}
-          <div class="flex gap-2">
-            <div class="mr-2">Prev / Next Lesson</div>
-            <button
-              onclick={() => {
-                const currentIndex = lessons.findIndex(
-                  (l) => l.id === selectedLesson.id,
-                );
-                if (currentIndex > 0) selectLesson(lessons[currentIndex - 1]);
-              }}
-              class="text-gray-600 cursor-pointer flex items-center gap-1 outline-0"
+
+        <div class="flex gap-2">
+          <div class="mr-2">Prev / Next Lesson</div>
+          <button
+            onclick={() => {
+              const currentIndex = lessons.findIndex(
+                (l) => l.id === selectedLesson.id,
+              );
+              if (currentIndex > 0) selectLesson(lessons[currentIndex - 1]);
+            }}
+            class="text-gray-600 cursor-pointer flex items-center gap-1 outline-0"
+          >
+            <kbd
+              class="px-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded"
+              >←</kbd
             >
-              <kbd
-                class="px-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded"
-                >←</kbd
-              >
-            </button>
-            <button
-              onclick={() => {
-                const currentIndex = lessons.findIndex(
-                  (l) => l.id === selectedLesson.id,
-                );
-                if (currentIndex < lessons.length - 1)
-                  selectLesson(lessons[currentIndex + 1]);
-              }}
-              class="text-gray-600 cursor-pointer flex items-center gap-1 outline-0"
+          </button>
+          <button
+            onclick={() => {
+              const currentIndex = lessons.findIndex(
+                (l) => l.id === selectedLesson.id,
+              );
+              if (currentIndex < lessons.length - 1)
+                selectLesson(lessons[currentIndex + 1]);
+            }}
+            class="text-gray-600 cursor-pointer flex items-center gap-1 outline-0"
+          >
+            <kbd
+              class="px-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded"
+              >→</kbd
             >
-              <kbd
-                class="px-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded"
-                >→</kbd
-              >
-            </button>
-          </div>
-        {/if}
-        {#if isFinished}
-          <div class="flex gap-2">
-            <div>Proceed</div>
-            <button
-              onclick={() => {
-                const currentIndex = lessons.findIndex(
-                  (l) => l.id === selectedLesson.id,
-                );
-                if (currentIndex < lessons.length - 1)
-                  selectLesson(lessons[currentIndex + 1]);
-              }}
-              class="text-gray-600 cursor-pointer flex items-center gap-1"
-            >
-              <kbd
-                class="px-2 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded"
-                >Enter</kbd
-              >
-            </button>
-          </div>
-        {/if}
+          </button>
+        </div>
       </div>
 
       <!-- Language Selector -->
-      <div class="mt-8">
+      <div class="mt-6">
         <div class="flex gap-2 justify-center">
           <div class="mr-2">Language</div>
           {#each languages as lang}
