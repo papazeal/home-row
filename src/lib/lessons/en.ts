@@ -15,7 +15,7 @@ export const lessons: Lesson[] = [
     title: "Home Row",
     description: "Master the home row keys: A S D F and J K L ;",
     tips: "Place your fingers on the middle row. Use the bumps on F and J to find your position without looking. Keep your wrists slightly elevated.",
-    content: "aaa sss ddd fff jjj kkk lll ;;; asdf jkl; asdfjkl;",
+    content: "asdf jkl; asdfjkl;",
     words: "sad dad fad lad ask all lass fall flask salad lads alfa lafs",
   },
   {
