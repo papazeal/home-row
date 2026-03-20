@@ -32,6 +32,7 @@
     const words = selectedLesson.words?.split(" ");
     if (!words) return selectedLesson.content;
     const shuffled = [...words].sort(() => Math.random() - 0.5);
+    // return shuffled.slice(0, 10).join(" ");
     return selectedLesson.content + " " + shuffled.slice(0, 10).join(" ");
   });
 
@@ -220,7 +221,7 @@
             <button
               onclick={() => selectLesson(lesson)}
               aria-label="Lesson {index + 1}"
-              class="w-2.5 h-2.5 rounded-full transition-colors bg-gray-200 cursor-pointer
+              class="w-4.5 h-2.5 rounded-full transition-colors bg-gray-200 cursor-pointer
                    {selectedLesson.id === lesson.id
                 ? 'bg-green-600!'
                 : 'hover:border-gray-300'}"
