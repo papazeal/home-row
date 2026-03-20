@@ -260,7 +260,7 @@
             {char}
             {#if index === currentCharIndex && !isFinished}
               <span
-                class="absolute right-0 top-0 bottom-0 min-w-3 w-full bg-gray-500/10 animate-pulse"
+                class="absolute right-0 top-0 bottom-0 min-w-3 w-full bg-gray-500/20 animate-pulse"
                 style="animation: blink 1s infinite;"
               ></span>
             {/if}
