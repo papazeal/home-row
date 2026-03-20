@@ -207,7 +207,7 @@
   });
 </script>
 
-<div class="bg-white p-8 flex flex-col justify-center md:min-h-[70lvh]">
+<div class="bg-white p-8 flex flex-col justify-center md:min-h-dvh pb-30">
   <div class="max-w-3xl mx-auto">
     <!-- Main Typing Area -->
     <div class="">
