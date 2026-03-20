@@ -5,7 +5,6 @@
     type Language,
     type Lesson,
   } from "$lib/lessons";
-  import { onMount, onDestroy } from "svelte";
   import { browser } from "$app/environment";
   import confetti from "canvas-confetti";
 
@@ -14,18 +13,27 @@
 
   const languages: Language[] = ["en", "th"];
 
-  // Initialize with default values
-  let selectedLanguage: Language = "en";
-  let lessons: Lesson[] = getLessons("en");
-  let selectedLesson: Lesson = lessons[0];
-  let userInput = "";
-  let startTime: number | null = null;
-  let isStarted = false;
-  let isFinished = false;
+  let selectedLanguage = $state<Language>("en");
+  let lessons = $state<Lesson[]>(getLessons("en"));
+  let selectedLesson = $state<Lesson>(getLessons("en")[0]);
+  let userInput = $state("");
 
-  $: currentCharIndex = userInput.length;
-  $: isCorrect = (index: number) =>
-    userInput[index] === selectedLesson.content[index];
+  let isStarted = $state(false);
+  let isFinished = $state(false);
+  let shuffleKey = $state(0);
+
+  let currentCharIndex = $derived(userInput.length);
+  let isCorrect = $derived(
+    (index: number) => userInput[index] === currentContent[index],
+  );
+
+  let currentContent = $derived.by(() => {
+    void shuffleKey;
+    const words = selectedLesson.words?.split(" ");
+    if (!words) return selectedLesson.content;
+    const shuffled = [...words].sort(() => Math.random() - 0.5);
+    return selectedLesson.content + " " + shuffled.slice(0, 10).join(" ");
+  });
 
   function loadFromStorage() {
     if (!browser) return;
@@ -100,12 +108,6 @@
       return;
     }
 
-    // Start timer on first keypress
-    if (!isStarted && !event.key.startsWith("F")) {
-      startTime = Date.now();
-      isStarted = true;
-    }
-
     // Handle backspace
     if (event.key === "Backspace") {
       if (userInput.length > 0) {
@@ -121,7 +123,7 @@
     if (event.key.length !== 1) return;
 
     // Get the expected character
-    const expectedChar = selectedLesson.content[userInput.length];
+    const expectedChar = currentContent[userInput.length];
 
     // Stop if we've reached the end
     if (!expectedChar) return;
@@ -130,7 +132,7 @@
     userInput += event.key;
 
     // Check if lesson is completed
-    if (userInput.length === selectedLesson.content.length) {
+    if (userInput.length === currentContent.length) {
       finishLesson();
     }
 
@@ -173,8 +175,6 @@
   }
 
   function finishLesson() {
-    if (!startTime) return;
-
     isFinished = true;
     playSuccessMelody();
     triggerConfetti();
@@ -182,9 +182,9 @@
 
   function resetLesson() {
     userInput = "";
-    startTime = null;
     isStarted = false;
     isFinished = false;
+    shuffleKey++;
   }
 
   function selectLesson(lesson: Lesson) {
@@ -193,17 +193,16 @@
     saveToStorage();
   }
 
-  onMount(() => {
+  $effect(() => {
     loadFromStorage();
     if (browser) {
       window.addEventListener("keydown", handleKeydown);
     }
-  });
-
-  onDestroy(() => {
-    if (browser) {
-      window.removeEventListener("keydown", handleKeydown);
-    }
+    return () => {
+      if (browser) {
+        window.removeEventListener("keydown", handleKeydown);
+      }
+    };
   });
 </script>
 
@@ -234,16 +233,16 @@
       <!-- Target Text Display -->
 
       <div
-        class="my-16 bg-white text-center text-3xl leading-relaxed relative cursor-text transition-all outline-0"
+        class="my-16 bg-white text-center text-4xl leading-relaxed relative cursor-text transition-all outline-0"
         class:font-mono={selectedLanguage == "en"}
         role="textbox"
         tabindex="0"
       >
-        {#each selectedLesson.content.split("") as char, index}
+        {#each currentContent.split("") as char, index}
           {@const isSpace = char === " "}
           {@const isAlone =
-            selectedLesson.content.split("")[index - 1] == " " &&
-            selectedLesson.content.split("")[index + 1] == " "}
+            currentContent.split("")[index - 1] == " " &&
+            currentContent.split("")[index + 1] == " "}
           <span
             class="relative transition-all duration-150 inline-block"
             class:text-green-600={index < userInput.length && isCorrect(index)}
@@ -252,9 +251,8 @@
             class:font-bold-={index === currentCharIndex && !isFinished}
             class:whitespace-pre={isSpace}
             class:w-4={isSpace}
-            class:font-mono={char !=
-              selectedLesson.content.split("")[index + 1] &&
-              char != selectedLesson.content.split("")[index - 1] &&
+            class:font-mono={char != currentContent.split("")[index + 1] &&
+              char != currentContent.split("")[index - 1] &&
               !isAlone}
           >
             {char}

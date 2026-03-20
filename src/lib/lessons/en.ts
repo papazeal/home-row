@@ -6,6 +6,7 @@ export interface Lesson {
   tips?: string;
   targetWPM?: number;
   difficulty?: string;
+  words?: string;
 }
 
 export const lessons: Lesson[] = [
@@ -14,16 +15,16 @@ export const lessons: Lesson[] = [
     title: "Home Row",
     description: "Master the home row keys: A S D F and J K L ;",
     tips: "Place your fingers on the middle row. Use the bumps on F and J to find your position without looking. Keep your wrists slightly elevated.",
-    content:
-      "aaa sss ddd fff jjj kkk lll ;;; asdf jkl; asdf jkl; asdfjkl; fad dad sad flask falls",
+    content: "aaa sss ddd fff jjj kkk lll ;;; asdf jkl; asdfjkl;",
+    words: "sad dad fad lad ask all lass fall flask salad",
   },
   {
     id: "index-reaches-gh",
     title: "Index Reaches (G and H)",
     description: "Master the inner reaches of the home row.",
     tips: "Reach your left index finger to G and your right index finger to H. Always snap back to F and J immediately after.",
-    content:
-      "fgf jhj fgf jhj f g f j h j asdfg hjkl; had gas sash flag dash glad glass flags flash gas flag flask falls glad lag",
+    content: "fgf jhj fgf jhj f g f j h j asdfg hjkl;",
+    words: "had gas hag hags shag dash gash hash hug",
   },
   {
     id: "top-row-ei",
@@ -31,8 +32,8 @@ export const lessons: Lesson[] = [
     description: "Using your middle fingers to reach the top row.",
     tips: "Your left middle finger moves from D to E. Your right middle finger moves from K to I. Keep other fingers anchored.",
     difficulty: "beginner",
-    content:
-      "ded kik ded kik ed ik ed ik did die fed fig kid side dish fish flies hike field haggle shield field gilded skid jagged high idle slide hide",
+    content: "ded kik ded kik ed ik ed ik",
+    words: "did die fed fig kid side dish fish",
   },
   {
     id: "top-row-ru",
@@ -41,6 +42,7 @@ export const lessons: Lesson[] = [
     tips: "Left index reaches from F to R. Right index reaches from J to U.",
     content:
       "frf juj frf juj rf ju rf ju rug red rid fur fire user sure higher rudder guard rude judge fraud dragged jagged urged huge surge guard",
+    words: "rug red rid fur fire user rude surge guard cur ruder surer",
   },
   {
     id: "top-row-qw-op",
@@ -49,6 +51,7 @@ export const lessons: Lesson[] = [
     tips: "Left ring to W, pinky to Q. Right ring to O, pinky to P. These fingers are weaker, so keep your touch light.",
     content:
       "sws aqa lol ;p; was was door pool power go loose world paper power proud squad guard judge power world power proud world power proud",
+    words: "was pool power paper proud wasp swop prep work prow pow swap",
   },
   {
     id: "top-row-ty",
@@ -57,6 +60,7 @@ export const lessons: Lesson[] = [
     tips: "Left index reaches up and right for T. Right index reaches up and left for Y. Stretch without moving your whole hand.",
     content:
       "ftf jyj ftf jyj tf jy tf jy they that type your toy tray year study truth yesterday judge power quiet quote proud type year study type power year",
+    words: "they that your toy tray year study truth yet treaty totally tart",
   },
   {
     id: "bottom-row-vm-bc",
@@ -65,6 +69,8 @@ export const lessons: Lesson[] = [
     tips: "F to V and B. J to M and N. D to C. Try not to rest your palms on the desk while reaching down.",
     content:
       "fvf fbf jmj jnj dcd v b m n c cave bob mind neck back come move much bean vanish cabin beacon common manage banish beacon manage vanish cabin common",
+    words:
+      "cave bob mind back come move much bean cabin common manage bomb comb van",
   },
   {
     id: "bottom-row-xz-comma",
@@ -73,6 +79,7 @@ export const lessons: Lesson[] = [
     tips: "S to X, A to Z. K to comma, L to period. Precision is more important than speed here.",
     content:
       "sxs aza k,k l.l x z , . extra zero size zone mark. look, back. next. box zone. vanish; box; zone; next; look; back; extra; size; zero; mark;",
+    words: "extra zero zone box axial vex mix max zap zoom sax tax hex",
   },
   {
     id: "shift-keys",
@@ -82,6 +89,7 @@ export const lessons: Lesson[] = [
     difficulty: "intermediate",
     content:
       "Aa Ss Dd Ff Gg Hh Jj Kk Ll Qq Ww Ee Rr Tt Yy Uu Ii Oo Pp Zz Xx Cc Vv Bb Nn Mm Had Gas Slab Dash Glad Flask Falls Quick Brown Fox Jumps Lazy Dog",
+    words: "Had Gas Slab Dash Glad Flask Falls Quick Brown Fox Jumps Lazy",
   },
   {
     id: "comprehensive-basics",
@@ -90,6 +98,7 @@ export const lessons: Lesson[] = [
     tips: "Keep a steady rhythm. It is better to type slowly and steadily than to type fast and pause.",
     content:
       "the quick brown fox jumps over the lazy dog. jump high and move fast. study your keys daily.",
+    words: "the quick brown fox jumps over lazy dog jump high move fast",
   },
 ];
 
