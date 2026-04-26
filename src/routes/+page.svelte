@@ -45,9 +45,9 @@
     ) as Language;
     const savedLessonId = localStorage.getItem(STORAGE_KEY_LESSON_ID);
 
-    if (savedLanguage === "en" || savedLanguage === "th") {
-      selectedLanguage = savedLanguage;
-    }
+    // if (savedLanguage === "en" || savedLanguage === "th") {
+    //   selectedLanguage = savedLanguage;
+    // }
 
     lessons = getLessons(selectedLanguage);
 
@@ -209,7 +209,7 @@
 </script>
 
 <div class="bg-white p-8 flex flex-col justify-center md:min-h-dvh pb-30">
-  <div class="max-w-3xl mx-auto">
+  <div class="max-w-3xl px-8 mx-auto">
     <!-- Main Typing Area -->
     <div class="">
       <div class="text-center">
@@ -331,7 +331,7 @@
       </div>
 
       <!-- Language Selector -->
-      <div class="mt-6">
+      <div class="mt-6 hidden">
         <div class="flex gap-2 justify-center">
           <div class="mr-2">Language</div>
           {#each languages as lang}
@@ -350,7 +350,7 @@
       <div class="flex justify-center">
         <a
           href="https://papazeal.com"
-          class=" text-center mt-12 text-gray-500 bg-gray-100 px-4 py-1 rounded-full border-gray-300 border hover:bg-gray-200"
+          class=" text-center mt-5 text-gray-500 bg-gray-100 px-4 py-1 rounded-full border-gray-300 border hover:bg-gray-200"
         >
           made by papazeal
         </a>
