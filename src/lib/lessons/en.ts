@@ -98,7 +98,7 @@ export const lessons: Lesson[] = [
     title: "Basic Sentence",
     description: "Combining all lowercase letters and basic punctuation.",
     tips: "Keep a steady rhythm. It is better to type slowly and steadily than to type fast and pause.",
-    content: "The quick brown fox jumps over a lazy dog.",
+    content: "the quick brown fox jumps over a lazy dog",
     words: "the quick brown fox jumps over a lazy dog",
   },
 ];
