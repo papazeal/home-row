@@ -349,10 +349,10 @@
       </div>
       <div class="flex justify-center">
         <a
-          href="https://papazeal.com"
-          class=" text-center mt-5 text-gray-500 bg-gray-100 px-4 py-1 rounded-full border-gray-300 border hover:bg-gray-200"
+          href="https://cookiecode.app"
+          class=" text-center mt-5 text-gray-500"
         >
-          made by papazeal
+          Made by CookieCode
         </a>
       </div>
     </div>
